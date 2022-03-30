@@ -96,22 +96,41 @@ class EightPuzzle(State):
     def print(self):
         pass
 
+    def isNotSolvable(self):
+        l = list(self.board.flatten())
+        for i in range(len(l)):
+            l[i] = int(l[i])
+        self.puzzle = l
+        count=0
+        for i in range(8):
+            for j in range(i,9):
+                if (self.puzzle[i] > self.puzzle[j] and              
+                    self.puzzle[j]!=0):
+                    count+=1
+        if count%2==0:
+            return True
+        else:
+            return False
 
 def main():
     print('8-Puzzle Solver')
-    board = np.array([[8,3,6],[7,5,4],[2,1,0]])
+    board = np.array([[3,4,8],[1,2,5],[7,0,6]])
     state = EightPuzzle(board, board.shape[0], " ")
-    algorithm = AEstrela()
-    print("Initial state with h = "+str(state.h()))
-    start = time.time()
-    result = algorithm.search(state)
-    end = time.time()
-    if result != None:
-        print(result.show_path())
-        print('Final state with h = '+str(result.h()))
-        print('Duration in seconds = '+str(end-start))
+    if (state.isNotSolvable()):
+        print("Not Solvable")
     else:
-        print('Nao achou solucao')
+        print("Solvable")
+        algorithm = AEstrela()
+        print("Initial state with h = "+str(state.h()))
+        start = time.time()
+        result = algorithm.search(state)
+        end = time.time()
+        if result != None:
+            print(result.show_path())
+            print('Final state with h = '+str(result.h()))
+            print('Duration in seconds = '+str(end-start))
+        else:
+            print('Nao achou solucao')
 
 if __name__ == '__main__':
     main()
